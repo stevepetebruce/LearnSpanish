@@ -39,7 +39,7 @@ export function ThemeToggle() {
 			   label: "System",
 			   icon: <Monitor  />, 
 		   },
-	   ]
+	   ] as const;
 
 
 	let current;

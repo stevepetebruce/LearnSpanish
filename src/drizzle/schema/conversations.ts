@@ -1,5 +1,5 @@
 import { createdAt, id, updatedAt } from "../schemaHelpers";
-import {  pgTable, varchar , uuid} from "drizzle-orm/pg-core";
+import {  pgTable, varchar , uuid } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { LanguageInfoTable } from "./languageInfo";
 
