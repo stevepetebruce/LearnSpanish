@@ -27,17 +27,17 @@ export function ThemeToggle() {
 		   {
 			   value: "light",
 			   label: "Light",
-			   icon: <Sun  />, 
+			   icon: <Sun className="mr-2" />, 
 		   },
 		   {
 			   value: "dark",
 			   label: "Dark",
-			   icon: <Moon />, 
+			   icon: <Moon className="mr-2" />, 
 		   },
 		   {
 			   value: "system",
 			   label: "System",
-			   icon: <Monitor  />, 
+			   icon: <Monitor className="mr-2" />, 
 		   },
 	   ] as const;
 
@@ -57,7 +57,7 @@ export function ThemeToggle() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size="icon" aria-label="Toggle theme">
+				<Button variant="ghost" size="icon" aria-label="Toggle theme" className="cursor-pointer">
 					{current.icon}
 				</Button>
 			</DropdownMenuTrigger>
