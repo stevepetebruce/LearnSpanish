@@ -22,31 +22,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { experienceLevels } from "@/drizzle/schema/languageInfo";
-import { formSchema } from "../schemas";
+import { experienceLevels, LanguageInfoTable } from "@/drizzle/schema/languageInfo";
 import { formatExperienceLevel } from "../lib/formatters";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { languageInfoSchema } from "../schemas";
+import { createLanguageInfo, updateLanguageInfo } from "../actions";
+import { toast } from "sonner";
 
-export type LanguageInfoFormData = z.infer<typeof formSchema>;
+type LanguageInfoFormData = z.infer<typeof languageInfoSchema>;
 
-interface LanguageInfoFormProps {
-  defaultValues?: Partial<LanguageInfoFormData>;
-  onSubmit: (data: LanguageInfoFormData) => void;
-}
 
 export function LanguageInfoForm({
-  defaultValues,
-  onSubmit,
-}: LanguageInfoFormProps) {
+  languageInfo,
+}: {
+  languageInfo?: Pick<
+    typeof LanguageInfoTable.$inferSelect,
+    "id" | "name" | "title" | "description" | "experienceLevel"
+  >
+}) {
   const form = useForm<LanguageInfoFormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: defaultValues?.name ?? "",
+    resolver: zodResolver(languageInfoSchema),
+    defaultValues: languageInfo ?? {
+      name: "",
       title: null,
-      experienceLevel: defaultValues?.experienceLevel ?? "beginner",
-      description: defaultValues?.description ?? "",
+      experienceLevel: "beginner",
+      description: "",
     },
   });
+
+  async function onSubmit(values: LanguageInfoFormData) {
+    const action = languageInfo ? updateLanguageInfo.bind(null, languageInfo.id) : createLanguageInfo;
+    const res = await action(values);
+
+    if(res?.error) {
+      toast.error(res.message);
+      // Handle error (e.g., show a notification)
+    }
+  }
 
   return (
     <Form {...form}>

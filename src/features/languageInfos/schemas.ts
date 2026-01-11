@@ -1,7 +1,7 @@
 import { experienceLevels } from "@/drizzle/schema";
 import z from "zod";
 
-export const formSchema = z.object({
+export const languageInfoSchema = z.object({
   name: z.string().min(1, "Required"),
   title: z.string().min(1).nullable(),
   experienceLevel: z.enum(experienceLevels),

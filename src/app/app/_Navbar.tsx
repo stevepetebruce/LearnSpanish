@@ -11,9 +11,15 @@ import {
 import { SignOutButton, useClerk } from "@clerk/nextjs"
 import Link from "next/link"
 import {UserAvatar} from "@/features/users/components/UserAvatar"
+import { useEffect, useState } from "react"
 
 export function Navbar({user}: {user: { name: string , imageUrl?: string }}) {
     const { openUserProfile } = useClerk()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     return (
         <nav className="h-header border-b flex items-center justify-between px-4">
@@ -27,23 +33,25 @@ export function Navbar({user}: {user: { name: string , imageUrl?: string }}) {
             <div className="flex items-center gap-4">
                 <ThemeToggle />
                 
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <UserAvatar user={user} className="cursor-pointer" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openUserProfile()} className="cursor-pointer">
-                            <User className="mr-2" />
-                            Profile
-                        </DropdownMenuItem>
-                        <SignOutButton>
-                            <DropdownMenuItem className="cursor-pointer">
-                                <LogOut className="mr-2" />
-                                Logout
+                {mounted && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <UserAvatar user={user} className="cursor-pointer" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => openUserProfile()} className="cursor-pointer">
+                                <User className="mr-2" />
+                                Profile
                             </DropdownMenuItem>
-                        </SignOutButton>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                            <SignOutButton>
+                                <DropdownMenuItem className="cursor-pointer">
+                                    <LogOut className="mr-2" />
+                                    Logout
+                                </DropdownMenuItem>
+                            </SignOutButton>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
             </div>
         </nav>
     );
