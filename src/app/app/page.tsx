@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { LanguageInfoForm } from "@/features/languageInfos/components/LanguageInfoForm";
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
-import { Arrow } from "@radix-ui/react-dropdown-menu";
 import { formatExperienceLevel } from "@/features/languageInfos/lib/formatters";
 
 export default function ApPage() {
@@ -45,17 +44,18 @@ async function LanguageInfos() {
                 </Link>
                 </Button>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 has-hover:*:not-hover:opacity-70">
                 {languageInfos.map((languageInfo) => (
                     <Link
                         key={languageInfo.id}
                         href={`/app/language-infos/${languageInfo.id}`}
+                        className="hover:scale-[1.02] transition-[transform_opacity]"
                     >
                         <Card className="h-full">
                            <div className="flex items-center justify-between h-full">
-                                <div className="space-y-4 h-full">
+                                <div className="space-y-4 h-full flex-1 min-w-0">
                                     <CardHeader>
-                                        <CardTitle className="text-lg">{languageInfo.name}</CardTitle>
+                                        <CardTitle className="text-lg truncate">{languageInfo.name}</CardTitle>
                                     </CardHeader>
                                     <CardContent className="text-muted-foreground line-clamp-3">
                                         {languageInfo.description}
@@ -73,6 +73,14 @@ async function LanguageInfos() {
                         </Card>
                     </Link>
                 ))}
+                <Link href="/app/language-infos/new">
+                    <Card className="h-full items-center justify-center border-dashed border-3 bg-transparent hover:border-primary/50 transition-colors shadow-none ">
+                        <div className="flex text-lg items-center justify-center gap-2">
+                            <PlusIcon className="size-6" />
+                            New Language Description
+                        </div>
+                    </Card>
+                </Link>
             </div>
         </div>
     );
