@@ -1,27 +1,27 @@
-import react, { ReactNode, Suspense } from "react";
+import react, { ReactNode, Suspense } from "react"
 
-export function SuspendedItem<T> ({
-    item,
-    fallback,
-    result
+export function SuspendedItem<T>({
+  item,
+  fallback,
+  result,
 }: {
-    item: Promise<T>;
-    fallback: ReactNode;
-    result: (item: T) => ReactNode;
+  item: Promise<T>
+  fallback: ReactNode
+  result: (item: T) => ReactNode
 }) {
-    return (
-        <Suspense fallback={fallback}>
-            <InnerComponent item={item} result={result} />
-        </Suspense>
-    );
+  return (
+    <Suspense fallback={fallback}>
+      <InnerComponent item={item} result={result} />
+    </Suspense>
+  )
 }
 
-async function InnerComponent<T> ({
-    item,
-    result
+async function InnerComponent<T>({
+  item,
+  result,
 }: {
-    item: Promise<T>;
-    result: (item: T) => ReactNode;
+  item: Promise<T>
+  result: (item: T) => ReactNode
 }) {
-    return result(await item);
-};
+  return result(await item)
+}

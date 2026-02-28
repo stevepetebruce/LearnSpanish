@@ -10,49 +10,49 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { SignOutButton, useClerk } from "@clerk/nextjs"
 import Link from "next/link"
-import {UserAvatar} from "@/features/users/components/UserAvatar"
+import { UserAvatar } from "@/features/users/components/UserAvatar"
 import { useEffect, useState } from "react"
 
-export function Navbar({user}: {user: { name: string , imageUrl?: string }}) {
-    const { openUserProfile } = useClerk()
-    const [mounted, setMounted] = useState(false)
+export function Navbar({ user }: { user: { name: string; imageUrl?: string } }) {
+  const { openUserProfile } = useClerk()
+  const [mounted, setMounted] = useState(false)
 
-    useEffect(() => {
-        setMounted(true)
-    }, [])
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-    return (
-        <nav className="h-header border-b flex items-center justify-between px-4">
-            {/* Left side - Logo and brand name */}
-            <Link href="/app" className="flex items-center gap-2">
-                <BrainCircuit className="size-8 text-primary" />
-                <span className="text-xl font-semibold">Spanglish</span>
-            </Link>
+  return (
+    <nav className="h-header border-b flex items-center justify-between px-4">
+      {/* Left side - Logo and brand name */}
+      <Link href="/app" className="flex items-center gap-2">
+        <BrainCircuit className="size-8 text-primary" />
+        <span className="text-xl font-semibold">Spanglish</span>
+      </Link>
 
-            {/* Right side - Theme toggle and user dropdown */}
-            <div className="flex items-center gap-4">
-                <ThemeToggle />
-                
-                {mounted && (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <UserAvatar user={user} className="cursor-pointer" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openUserProfile()} className="cursor-pointer">
-                                <User className="mr-2" />
-                                Profile
-                            </DropdownMenuItem>
-                            <SignOutButton>
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <LogOut className="mr-2" />
-                                    Logout
-                                </DropdownMenuItem>
-                            </SignOutButton>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                )}
-            </div>
-        </nav>
-    );
+      {/* Right side - Theme toggle and user dropdown */}
+      <div className="flex items-center gap-4">
+        <ThemeToggle />
+
+        {mounted && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <UserAvatar user={user} className="cursor-pointer" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => openUserProfile()} className="cursor-pointer">
+                <User className="mr-2" />
+                Profile
+              </DropdownMenuItem>
+              <SignOutButton>
+                <DropdownMenuItem className="cursor-pointer">
+                  <LogOut className="mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </SignOutButton>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+    </nav>
+  )
 }

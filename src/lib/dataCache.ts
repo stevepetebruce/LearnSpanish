@@ -1,13 +1,13 @@
-type CacheTag = "users" | "languageInfo" | "conversations" | "questions";
+type CacheTag = "users" | "languageInfo" | "conversations" | "questions"
 
 export function getGlobalTag(tag: CacheTag) {
-    return `global-${tag}` as const;
+  return `global-${tag}` as const
 }
 
 export function getUserTag(tag: CacheTag, userId: string) {
-    return `user:${userId}:${tag}` as const; 
+  return `user:${userId}:${tag}` as const
 }
 
 export function getIdTag(tag: CacheTag, id: string) {
-    return `id:${id}:${tag}` as const;
+  return `id:${id}:${tag}` as const
 }

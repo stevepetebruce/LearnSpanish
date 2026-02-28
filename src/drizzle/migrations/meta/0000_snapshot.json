@@ -54,9 +54,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -126,12 +124,8 @@
           "name": "language_info_userId_users_id_fk",
           "tableFrom": "language_info",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -193,12 +187,8 @@
           "name": "questions_languageInfoId_language_info_id_fk",
           "tableFrom": "questions",
           "tableTo": "language_info",
-          "columnsFrom": [
-            "languageInfoId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["languageInfoId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -265,12 +255,8 @@
           "name": "conversations_languageInfoId_language_info_id_fk",
           "tableFrom": "conversations",
           "tableTo": "language_info",
-          "columnsFrom": [
-            "languageInfoId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["languageInfoId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -286,20 +272,12 @@
     "public.language_info_experience_level": {
       "name": "language_info_experience_level",
       "schema": "public",
-      "values": [
-        "beginner",
-        "intermediate",
-        "advanced"
-      ]
+      "values": ["beginner", "intermediate", "advanced"]
     },
     "public.questions_question_difficulty": {
       "name": "questions_question_difficulty",
       "schema": "public",
-      "values": [
-        "easy",
-        "medium",
-        "hard"
-      ]
+      "values": ["easy", "medium", "hard"]
     }
   },
   "schemas": {},

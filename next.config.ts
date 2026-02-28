@@ -1,18 +1,17 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
-
-import path from 'path';
+import path from "path"
 
 const nextConfig: NextConfig = {
-    experimental: {
-      useCache: true,
-    },
-    webpack: (config) => {
-        config.resolve = config.resolve || {};
-        config.resolve.alias = config.resolve.alias || {};
-        config.resolve.alias['@'] = path.resolve(__dirname, 'src');
-        return config;
-    },
-};
+  experimental: {
+    useCache: true,
+  },
+  webpack: (config) => {
+    config.resolve = config.resolve || {}
+    config.resolve.alias = config.resolve.alias || {}
+    config.resolve.alias["@"] = path.resolve(__dirname, "src")
+    return config
+  },
+}
 
-export default nextConfig;
+export default nextConfig

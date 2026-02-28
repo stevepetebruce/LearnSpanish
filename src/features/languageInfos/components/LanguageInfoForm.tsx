@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -11,26 +11,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+  FormDescription,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { experienceLevels, LanguageInfoTable } from "@/drizzle/schema/languageInfo";
-import { formatExperienceLevel } from "../lib/formatters";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { languageInfoSchema } from "../schemas";
-import { createLanguageInfo, updateLanguageInfo } from "../actions";
-import { toast } from "sonner";
+} from "@/components/ui/select"
+import { experienceLevels, LanguageInfoTable } from "@/drizzle/schema/languageInfo"
+import { formatExperienceLevel } from "../lib/formatters"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { languageInfoSchema } from "../schemas"
+import { createLanguageInfo, updateLanguageInfo } from "../actions"
+import { toast } from "sonner"
 
-type LanguageInfoFormData = z.infer<typeof languageInfoSchema>;
-
+type LanguageInfoFormData = z.infer<typeof languageInfoSchema>
 
 export function LanguageInfoForm({
   languageInfo,
@@ -48,14 +47,16 @@ export function LanguageInfoForm({
       experienceLevel: "beginner",
       description: "",
     },
-  });
+  })
 
   async function onSubmit(values: LanguageInfoFormData) {
-    const action = languageInfo ? updateLanguageInfo.bind(null, languageInfo.id) : createLanguageInfo;
-    const res = await action(values);
+    const action = languageInfo
+      ? updateLanguageInfo.bind(null, languageInfo.id)
+      : createLanguageInfo
+    const res = await action(values)
 
-    if(res?.error) {
-      toast.error(res.message);
+    if (res?.error) {
+      toast.error(res.message)
       // Handle error (e.g., show a notification)
     }
   }
@@ -86,7 +87,11 @@ export function LanguageInfoForm({
               <FormItem>
                 <FormLabel>Title (Optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., Learning Spanish"  value={field.value ?? ""} onChange={e => field.onChange(e.target.value || null)} />
+                  <Input
+                    placeholder="e.g., Learning Spanish"
+                    value={field.value ?? ""}
+                    onChange={(e) => field.onChange(e.target.value || null)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -99,13 +104,10 @@ export function LanguageInfoForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Experience Level</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="w-full">
-                      <SelectValue/>
+                      <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -135,18 +137,21 @@ export function LanguageInfoForm({
                   {...field}
                 />
               </FormControl>
-              <FormDescription>Be as descriptive as possible. The more detail you provide, the better we can tailor your learning experience.</FormDescription>
+              <FormDescription>
+                Be as descriptive as possible. The more detail you provide, the better we can tailor
+                your learning experience.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
         <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-            <LoadingSwap isLoading={form.formState.isSubmitting} >
-                Save Language Information
-            </LoadingSwap>
+          <LoadingSwap isLoading={form.formState.isSubmitting}>
+            Save Language Information
+          </LoadingSwap>
         </Button>
       </form>
     </Form>
-  );
+  )
 }
