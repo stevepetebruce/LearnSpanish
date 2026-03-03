@@ -9,7 +9,7 @@ export async function insertLanguageInfo(languageInfo: typeof LanguageInfoTable.
     userId: LanguageInfoTable.userId,
   })
 
-  revalidateLanguageInfoCache(newLanguageInfo)
+  revalidateLanguageInfoCache(newLanguageInfo.id, newLanguageInfo.userId)
 
   return newLanguageInfo
 }
@@ -27,7 +27,7 @@ export async function updateLanguageInfo(
       userId: LanguageInfoTable.userId,
     })
 
-  revalidateLanguageInfoCache(updatedLanguageInfo)
+  revalidateLanguageInfoCache(updatedLanguageInfo.id, updatedLanguageInfo.userId)
 
   return updatedLanguageInfo
 }

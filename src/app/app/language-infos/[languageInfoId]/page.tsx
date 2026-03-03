@@ -84,7 +84,7 @@ export default async function LanguageInfoPage({
             <SuspendedItem
               item={languageInfo}
               fallback={null}
-              result={(info) => <Badge variant="secondary">{info.title}</Badge>}
+              result={(info) => info.title && <Badge variant="secondary">{info.title}</Badge>}
             />
           </div>
           <p className="text-muted-foreground line-clamp-3">
@@ -123,7 +123,6 @@ export default async function LanguageInfoPage({
 async function getLanguageInfo(id: string, userId: string) {
   "use cache"
   cacheTag(getLanguageInfoTag(id))
-  await new Promise((resolve) => setTimeout(resolve, 3000))
 
   return db.query.LanguageInfoTable.findFirst({
     where: and(eq(LanguageInfoTable.id, id), eq(LanguageInfoTable.userId, userId)),
