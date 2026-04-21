@@ -16,7 +16,7 @@ export const ConversationTable = pgTable("conversations", {
 })
 
 export const conversationRelations = relations(ConversationTable, ({ one }) => ({
-  user: one(LanguageInfoTable, {
+  languageInfo: one(LanguageInfoTable, {
     fields: [ConversationTable.languageInfoId],
     references: [LanguageInfoTable.id],
   }),
