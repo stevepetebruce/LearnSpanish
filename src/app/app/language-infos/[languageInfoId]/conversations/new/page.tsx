@@ -1,4 +1,12 @@
+import { db } from "@/drizzle/db"
+import { LanguageInfoTable } from "@/drizzle/schema"
+import { getLanguageInfoTag } from "@/features/languageInfos/dbCache"
+import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser"
+import { and, eq } from "drizzle-orm"
+import { get } from "http"
 import { Loader2Icon } from "lucide-react"
+import { cacheTag } from "next/dist/server/use-cache/cache-tag"
+import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
 export default async function NewConversationPage({
@@ -21,5 +29,19 @@ export default async function NewConversationPage({
 }
 
 async function SuspendedComponent({ languageInfoId }: { languageInfoId: string }) {
-  return <div>New Conversation Form for {languageInfoId}</div>
+  const { userId, redirectToSignIn, user } = await getCurrentUser({ allData: true })
+  if (userId == null || user == null) {
+    return redirectToSignIn()
+  }
+  const languageInfo = await getLanguageInfo(languageInfoId, userId)
+  if (languageInfo == null) return notFound()
+}
+
+async function getLanguageInfo(id: string, userId: string) {
+  "use cache"
+  cacheTag(getLanguageInfoTag(id))
+
+  return db.query.LanguageInfoTable.findFirst({
+    where: and(eq(LanguageInfoTable.id, id), eq(LanguageInfoTable.userId, userId)),
+  })
 }
