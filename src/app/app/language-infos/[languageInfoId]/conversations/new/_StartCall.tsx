@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button"
 import { LanguageInfoTable } from "@/drizzle/schema"
 import { useVoice, VoiceReadyState } from "@humeai/voice-react"
 import { env } from "@/data/env/client"
-import { Loader2Icon, Mic, MicIcon, MicOffIcon, PhoneOffIcon } from "lucide-react"
+import { Loader2Icon, MicIcon, MicOffIcon, PhoneOffIcon } from "lucide-react"
+import { useMemo } from "react"
+import { CondensedMessages } from "@/services/hume/components/CondensedMessages"
+import { condensedChatMessages } from "@/services/hume/lib/condensedChatMessages"
 
 export default function StartCall({
   languageInfo,
@@ -20,33 +23,33 @@ export default function StartCall({
 }) {
   const { connect, readyState, disconnect } = useVoice()
 
-  //   if (readyState === VoiceReadyState.IDLE) {
-  //     return (
-  //       <div className="flex justify-center items-center h-screen-header">
-  //         <Button
-  //           size="lg"
-  //           onClick={async () => {
-  //             // Create Chat
-  //             connect({
-  //               auth: { type: "accessToken", value: accessToken },
-  //               configId: env.NEXT_PUBLIC_HUME_CONFIG_ID,
-  //               sessionSettings: {
-  //                 type: "session_settings",
-  //                 variables: {
-  //                   userName: user.name,
-  //                   title: languageInfo.title || "Not Specified",
-  //                   description: languageInfo.description,
-  //                   experienceLevel: languageInfo.experienceLevel,
-  //                 },
-  //               },
-  //             })
-  //           }}
-  //         >
-  //           Start Chat
-  //         </Button>
-  //       </div>
-  //     )
-  //   }
+  if (readyState === VoiceReadyState.IDLE) {
+    return (
+      <div className="flex justify-center items-center h-screen-header">
+        <Button
+          size="lg"
+          onClick={async () => {
+            // Create Chat
+            connect({
+              auth: { type: "accessToken", value: accessToken },
+              configId: env.NEXT_PUBLIC_HUME_CONFIG_ID,
+              sessionSettings: {
+                type: "session_settings",
+                variables: {
+                  userName: user.name,
+                  title: languageInfo.title || "Not Specified",
+                  description: languageInfo.description,
+                  experienceLevel: languageInfo.experienceLevel,
+                },
+              },
+            })
+          }}
+        >
+          Start Chat
+        </Button>
+      </div>
+    )
+  }
   if (readyState === VoiceReadyState.CONNECTING || readyState === VoiceReadyState.CLOSED) {
     return (
       <div className="h-screen-header flex items-center justify-center">
@@ -57,7 +60,7 @@ export default function StartCall({
 
   return (
     <div className="overflow-y-auto h-screen-header flex flex-col-reverse">
-      <div className="container py-6 flex flex-col items-center justify-end">
+      <div className="container py-6 flex flex-col items-center justify-end gap-4">
         <Messages user={user} />
         <Controls />
       </div>
@@ -66,7 +69,19 @@ export default function StartCall({
 }
 
 function Messages({ user }: { user: { name: string; imageUrl: string } }) {
-  return <div>Messages for {user.name}</div>
+  const { messages, fft } = useVoice()
+
+  const condensedMessages = useMemo(() => {
+    return condensedChatMessages(messages)
+  }, [messages])
+  return (
+    <CondensedMessages
+      messages={condensedMessages}
+      user={user}
+      maxFft={Math.max(...fft)}
+      className="max-w-5xl"
+    />
+  )
 }
 
 function Controls() {
@@ -98,19 +113,19 @@ function Controls() {
   )
 }
 
-function FftVisualizer({ fft }: { fft: number[] | null }) {
-  if (fft == null) {
-    return <div className="w-24 h-4 bg-muted rounded" />
-  }
+function FftVisualizer({ fft }: { fft: number[] }) {
   return (
-    <div className="flex items-end gap-1 h-4">
-      {fft.slice(0, 20).map((value, index) => (
-        <div
-          key={index}
-          className="bg-primary rounded"
-          style={{ width: 4, height: Math.max(value / 255, 0.1) * 16 }}
-        />
-      ))}
+    <div className="flex gap-1 items-center h-full">
+      {fft.map((value, index) => {
+        const percent = (value / 4) * 100
+        return (
+          <div
+            key={index}
+            className="min-h-0.5 bg-primary/75 w-0.5 rounded"
+            style={{ height: `${percent < 10 ? 0 : percent}%` }}
+          />
+        )
+      })}
     </div>
   )
 }
