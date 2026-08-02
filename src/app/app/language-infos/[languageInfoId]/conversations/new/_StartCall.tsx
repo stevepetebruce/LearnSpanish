@@ -1,13 +1,15 @@
 "use client"
-
 import { Button } from "@/components/ui/button"
 import { LanguageInfoTable } from "@/drizzle/schema"
 import { useVoice, VoiceReadyState } from "@humeai/voice-react"
 import { env } from "@/data/env/client"
 import { Loader2Icon, MicIcon, MicOffIcon, PhoneOffIcon } from "lucide-react"
-import { useMemo } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { CondensedMessages } from "@/services/hume/components/CondensedMessages"
 import { condensedChatMessages } from "@/services/hume/lib/condensedChatMessages"
+import { createConversation, updateConversation } from "@/features/conversations/actions"
+import { errorToast } from "@/lib/errorToast"
+import { useRouter } from "next/navigation"
 
 export default function StartCall({
   languageInfo,
@@ -21,7 +23,45 @@ export default function StartCall({
   user: { name: string; imageUrl: string }
   accessToken: string
 }) {
-  const { connect, readyState, disconnect } = useVoice()
+  const router = useRouter()
+  const { connect, readyState, chatMetadata, callDurationTimestamp } = useVoice()
+  const [conversationId, setConversationId] = useState<string | null>(null)
+  const durationRef = useRef(callDurationTimestamp)
+  durationRef.current = callDurationTimestamp
+
+  // sync conversation Id
+  useEffect(() => {
+    if (conversationId == null || chatMetadata?.chatId == null) {
+      return
+    }
+    updateConversation(conversationId, { humeChatId: chatMetadata.chatId })
+  }, [chatMetadata?.chatId, conversationId])
+
+  // sync duration
+  useEffect(() => {
+    if (conversationId === null) {
+      return
+    }
+    const intervalId = setInterval(() => {
+      if (conversationId == null) return
+      if (durationRef.current != null) {
+        updateConversation(conversationId, { duration: durationRef.current })
+      }
+    }, 10000) // every 10 seconds
+    return () => clearInterval(intervalId)
+  }, [conversationId])
+
+  // handle disconnect
+  useEffect(() => {
+    if (readyState !== VoiceReadyState.CLOSED) return
+    if (conversationId == null) {
+      router.push(`/app/language-infos/${languageInfo.id}/conversations`)
+    }
+    if (conversationId != null && durationRef.current != null) {
+      updateConversation(conversationId, { duration: durationRef.current })
+    }
+    router.push(`/app/language-infos/${languageInfo.id}/conversations/${conversationId}`)
+  }, [conversationId, readyState, router, languageInfo.id])
 
   if (readyState === VoiceReadyState.IDLE) {
     return (
@@ -30,6 +70,13 @@ export default function StartCall({
           size="lg"
           onClick={async () => {
             // Create Chat
+            const response = await createConversation({
+              languageInfoId: languageInfo.id,
+            })
+            if (response.error) {
+              return errorToast(response.message || "Error creating conversation")
+            }
+            setConversationId(response.id)
             connect({
               auth: { type: "accessToken", value: accessToken },
               configId: env.NEXT_PUBLIC_HUME_CONFIG_ID,
